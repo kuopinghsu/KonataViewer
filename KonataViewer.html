@@ -655,7 +655,7 @@
             
             <div class="separator"></div>
             
-            <button class="btn" id="split-lanes-btn" title="Toggle Split Lanes (each lane in its own sub-row)">⬍ Split Lanes</button>
+            <button class="btn" id="split-lanes-btn" title="Toggle Split Lanes (L)">⬍ Split Lanes</button>
             
             <div class="separator"></div>
             
@@ -836,6 +836,7 @@
                 <li><kbd>Ctrl</kbd>+<kbd>O</kbd> — Open file</li>
                 <li><kbd>+</kbd> / <kbd>−</kbd> — Zoom in / out</li>
                 <li><kbd>F</kbd> — Fit to view</li>
+                <li><kbd>L</kbd> — Toggle split lanes</li>
                 <li><kbd>Ctrl</kbd>+<kbd>F</kbd> — Find/Search</li>
                 <li><kbd>Ctrl</kbd>+<kbd>B</kbd> — Add bookmark</li>
                 <li><kbd>Escape</kbd> — Clear selection</li>
@@ -2200,6 +2201,10 @@
                     else if (e.key === 'f' || e.key === 'F') {
                         e.preventDefault();
                         this.viewer.fitView();
+                    }
+                    else if (e.key === 'l' || e.key === 'L') {
+                        e.preventDefault();
+                        document.getElementById('split-lanes-btn').click();
                     }
                     else if (e.key === 'Escape') {
                         e.preventDefault();

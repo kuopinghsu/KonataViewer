@@ -45,6 +45,7 @@ Then use the **📁 Open** button (or **Ctrl+O**) to load a `.kanata` trace file
 | `Ctrl+B` | Add bookmark |
 | `+` / `-` | Zoom in / out |
 | `F` | Fit visible rows to window height |
+| `L` | Toggle split lanes mode |
 | `Escape` | Clear selection |
 | `Ctrl+Scroll` | Zoom |
 | `Shift+Scroll` | Pan horizontally |
