@@ -6,6 +6,40 @@
     <title>Konata Viewer v1.0.0</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Crect x='3' y='3' width='66' height='66' rx='14' fill='%231E3A5F'/%3E%3Crect x='10' y='16' width='14' height='6' rx='2' fill='%235B9BD5'/%3E%3Crect x='26' y='16' width='18' height='6' rx='2' fill='%2370AD47'/%3E%3Crect x='46' y='16' width='16' height='6' rx='2' fill='%23FFC000'/%3E%3Crect x='10' y='26' width='10' height='6' rx='2' fill='%235B9BD5'/%3E%3Crect x='22' y='26' width='22' height='6' rx='2' fill='%2370AD47'/%3E%3Crect x='46' y='26' width='16' height='6' rx='2' fill='%23FFC000'/%3E%3Crect x='10' y='36' width='16' height='6' rx='2' fill='%235B9BD5'/%3E%3Crect x='28' y='36' width='16' height='6' rx='2' fill='%2370AD47'/%3E%3Crect x='46' y='36' width='16' height='6' rx='2' fill='%23FFC000'/%3E%3Crect x='10' y='46' width='12' height='6' rx='2' fill='%235B9BD5'/%3E%3Crect x='24' y='46' width='20' height='6' rx='2' fill='%2370AD47'/%3E%3Crect x='46' y='46' width='16' height='6' rx='2' fill='%23FFC000'/%3E%3Cline x1='20' y1='22' x2='36' y2='29' stroke='%23FFC800' stroke-width='1.5'/%3E%3Cpolygon points='36,29 34,27 34,31' fill='%23FFC800'/%3E%3C/svg%3E">
     <style>
+        /* ---- CSS custom properties ---- */
+        :root {
+            --bg:            #1E1E1E;
+            --panel-bg:      #252526;
+            --tb-bg:         #2D2D2D;
+            --tb-btn-hover:  rgba(255,255,255,0.08);
+            --tb-btn-active: rgba(79,139,255,0.2);
+            --border:        #3C3C3C;
+            --fg:            #D4D4D4;
+            --fg-dim:        #858585;
+            --accent:        #4F8BFF;
+            --canvas-bg:     #1E1E1E;
+            --canvas-label:  #252526;
+            --ruler-bg:      #2D2D2D;
+            --grid-line:     #2A2A2A;
+        }
+
+        /* ---- Light theme overrides ---- */
+        body.light {
+            --bg:            #FFFFFF;
+            --panel-bg:      #F5F5F5;
+            --tb-bg:         #F0F0F0;
+            --tb-btn-hover:  rgba(0,0,0,0.06);
+            --tb-btn-active: rgba(0,80,200,0.15);
+            --border:        #DDDDDD;
+            --fg:            #1E1E1E;
+            --fg-dim:        #666666;
+            --accent:        #0066CC;
+            --canvas-bg:     #FFFFFF;
+            --canvas-label:  #F0F0F0;
+            --ruler-bg:      #EEEEEE;
+            --grid-line:     #DDDDDD;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,11 +47,12 @@
         }
 
         body {
-            font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
-            background: #262930;
-            color: #c7c8ca;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
             overflow: hidden;
             height: 100vh;
+            font-size: 13px;
         }
 
         #app {
@@ -28,11 +63,11 @@
 
         /* Toolbar */
         #toolbar {
-            background: #303340;
-            border-bottom: 1px solid #3a3a3a;
-            padding: 8px 12px;
+            background: var(--tb-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 6px 10px;
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
             flex-shrink: 0;
         }
@@ -40,8 +75,8 @@
         #app-name-btn {
             background: none;
             border: none;
-            color: #5B9BD5;
-            font-size: 14px;
+            color: var(--accent);
+            font-size: 13px;
             font-weight: 700;
             font-family: inherit;
             cursor: pointer;
@@ -49,27 +84,31 @@
             border-radius: 4px;
             white-space: nowrap;
             letter-spacing: 0.3px;
-            transition: color 0.2s, background 0.2s;
+            transition: background 0.15s;
         }
         #app-name-btn:hover {
-            color: #7EC8E3;
-            background: rgba(91,155,213,0.1);
+            background: var(--tb-btn-hover);
         }
 
         .btn {
-            background: #3a3a3a;
-            border: 1px solid #4a4a4a;
-            color: #ccc;
-            padding: 6px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border: 1px solid transparent;
             border-radius: 4px;
+            background: transparent;
+            color: var(--fg);
+            font-size: 12px;
+            font-family: inherit;
             cursor: pointer;
-            font-size: 13px;
-            transition: all 0.2s;
+            white-space: nowrap;
+            transition: background 0.1s;
         }
 
         .btn:hover:not(:disabled) {
-            background: #4a4a4a;
-            border-color: #5a5a5a;
+            background: var(--tb-btn-hover);
+            border-color: var(--border);
         }
 
         .btn:disabled {
@@ -78,20 +117,19 @@
         }
 
         .btn.active {
-            background: #1a4a7a;
-            border-color: #2a6abf;
-            color: #fff;
+            background: var(--tb-btn-active);
+            border-color: var(--accent);
+            color: var(--accent);
         }
 
         .btn-icon {
-            padding: 6px 10px;
-            font-weight: bold;
+            padding: 3px 6px;
         }
 
         .separator {
             width: 1px;
-            height: 24px;
-            background: #3a3a3a;
+            height: 20px;
+            background: var(--border);
             margin: 0 4px;
         }
 
@@ -102,7 +140,7 @@
         #info {
             margin-left: auto;
             font-size: 12px;
-            color: #999;
+            color: var(--fg-dim);
         }
 
         /* Main Content */
@@ -117,7 +155,7 @@
             flex: 1;
             position: relative;
             overflow: hidden;
-            background: #262930;
+            background: var(--bg);
         }
 
         #main-canvas {
@@ -132,7 +170,7 @@
         /* Scrollbars */
         .scrollbar {
             position: absolute;
-            background: #1a1d26;
+            background: var(--bg);
             z-index: 10;
         }
         
@@ -191,15 +229,15 @@
             border-radius: 3px;
             cursor: pointer;
             font-size: 12px;
-            color: #c7c8ca;
+            color: var(--fg);
             border: 1px solid transparent;
             transition: background 0.1s;
             user-select: none;
         }
 
         .bookmark-item:hover {
-            background: #3a3d4a;
-            border-color: #4a4d5a;
+            background: var(--tb-btn-hover);
+            border-color: var(--border);
         }
 
         .bookmark-icon {
@@ -216,13 +254,13 @@
         }
 
         .bookmark-pos {
-            color: #666;
+            color: var(--fg-dim);
             font-size: 11px;
             flex-shrink: 0;
         }
 
         .bookmark-del {
-            color: #555;
+            color: var(--fg-dim);
             cursor: pointer;
             flex-shrink: 0;
             padding: 0 2px;
@@ -235,7 +273,7 @@
         }
 
         #bookmark-empty {
-            color: #555;
+            color: var(--fg-dim);
             font-size: 12px;
             padding: 4px 0;
         }
@@ -248,12 +286,12 @@
         #minimap-canvas {
             display: block;
             width: 100%;
-            border: 1px solid #3a3a4a;
+            border: 1px solid var(--border);
             border-radius: 2px;
         }
 
         #minimap-info {
-            color: #666;
+            color: var(--fg-dim);
             font-size: 11px;
             text-align: center;
             margin-top: 6px;
@@ -266,28 +304,30 @@
         /* Side Panel */
         #side-panel {
             width: 280px;
-            background: #303340;
-            border-left: 1px solid #3a3a3a;
+            background: var(--panel-bg);
+            border-left: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
         .panel-section {
-            border-bottom: 1px solid #3a3a3a;
+            border-bottom: 1px solid var(--border);
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
         .panel-header {
-            background: #2a2a2a;
-            padding: 8px 12px;
-            font-size: 12px;
+            background: var(--tb-bg);
+            padding: 6px 10px 4px;
+            font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #999;
+            letter-spacing: 0.06em;
+            color: var(--fg-dim);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
         }
 
         .panel-content {
@@ -312,11 +352,11 @@
         }
 
         .stat-label {
-            color: #999;
+            color: var(--fg-dim);
         }
 
         .stat-value {
-            color: #c7c8ca;
+            color: var(--fg);
             font-weight: 500;
         }
 
@@ -332,173 +372,267 @@
             height: 14px;
             border-radius: 2px;
             margin-right: 8px;
-            border: 1px solid #444;
+            border: 1px solid var(--border);
         }
 
         .legend-name {
-            color: #c7c8ca;
+            color: var(--fg);
         }
 
-        /* About Overlay */
+        /* ---- About Dialog ---- */
         #about-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.75);
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(2px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1100;
         }
+
         #about-dialog {
-            background: #252526;
-            border: 1px solid #3a3a3a;
-            border-radius: 10px;
-            width: 520px;
-            max-height: 90vh;
-            overflow: hidden;
+            width: min(520px, 92vw);
+            max-height: min(82vh, 720px);
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.45);
             display: flex;
             flex-direction: column;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            overflow: hidden;
         }
-        #about-header {
-            background: #1E1E1E;
-            padding: 28px 24px 22px;
+
+        .about-hero {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 8px;
+            padding: 24px 24px 20px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(79,139,255,0.1), var(--panel-bg));
         }
-        #about-header svg { display: block; }
-        #about-title {
-            color: #fff;
-            font-size: 20px;
+
+        .about-icon {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            background: #1c3a6e;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+        }
+
+        .about-icon .bar {
+            position: absolute;
+            left: 12px;
+            height: 7px;
+            border-radius: 999px;
+        }
+
+        .about-icon .bar-1 { top: 14px; width: 29px; background: #5b9bd5; }
+        .about-icon .bar-2 { top: 26px; left: 18px; width: 22px; background: #7ec8e3; }
+        .about-icon .bar-3 { top: 38px; width: 36px; background: #5b9bd5; }
+        .about-icon .bar-4 { top: 50px; left: 22px; width: 18px; background: #7ec8e3; }
+
+        .about-icon .marker {
+            position: absolute;
+            top: 10px;
+            right: 24px;
+            width: 2px;
+            height: 46px;
+            background: #ffc107;
+        }
+
+        .about-icon .marker::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -3px;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 8px solid #ffc107;
+        }
+
+        .about-title {
+            font-size: 18px;
             font-weight: 700;
-            letter-spacing: 0.2px;
+            color: var(--fg);
         }
-        #about-sub {
-            color: #9E9E9E;
+
+        .about-subtitle {
+            color: var(--fg-dim);
             font-size: 12px;
+            text-align: center;
         }
-        .about-sep {
-            height: 1px;
-            background: #3A3A3A;
-            flex-shrink: 0;
-        }
-        #about-body {
-            padding: 16px 24px;
-            overflow-y: auto;
+
+        .about-body {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
+            padding: 18px 20px;
+            overflow: auto;
         }
-        .about-block {
-            background: #2B2B2C;
-            border: 1px solid #3A3A3A;
-            border-radius: 8px;
-            padding: 10px 12px;
+
+        .about-section {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
         }
-        .about-sect {
-            color: #5B9BD5;
-            font-size: 10px;
+
+        .about-section-title {
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 6px;
+            letter-spacing: 0.06em;
+            color: var(--fg-dim);
+            margin-bottom: 10px;
         }
-        .about-table { width: 100%; border-collapse: collapse; }
-        .about-table td { padding: 2px 0; vertical-align: top; font-size: 12px; }
-        .about-key { color: #7EC8E3; font-weight: 600; width: 120px; padding-right: 12px; white-space: nowrap; }
-        .about-val { color: #D4D4D4; }
-        #about-footer {
-            padding: 10px 16px 14px;
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 130px 1fr;
+            gap: 8px 12px;
+            font-size: 12px;
+        }
+
+        .about-key {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .about-val {
+            color: var(--fg);
+        }
+
+        .about-footer {
             display: flex;
             justify-content: flex-end;
+            padding: 0 20px 18px;
         }
-        #about-close-btn {
-            background: #0E4D80;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 6px 22px;
-            cursor: pointer;
-            font-family: inherit;
-            transition: background 0.2s;
-        }
-        #about-close-btn:hover { background: #1565C0; }
 
-        /* Help Overlay */
+        #about-close-btn {
+            border: 1px solid transparent;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 8px;
+            min-width: 84px;
+            height: 34px;
+            padding: 0 16px;
+            font-weight: 600;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: filter 0.15s;
+        }
+
+        #about-close-btn:hover { filter: brightness(1.08); }
+
+        /* ---- Help Dialog ---- */
         #help-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(2px);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
 
-        #help-content {
-            background: #2d2d2d;
-            border: 1px solid #4a4a4a;
-            border-radius: 8px;
-            padding: 24px;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
+        #help-dialog {
+            width: min(760px, 92vw);
+            max-height: min(82vh, 760px);
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.45);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        #help-content h2 {
-            color: #fff;
-            margin-bottom: 16px;
+        .help-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
         }
 
-        #help-content h3 {
-            color: #ccc;
-            margin: 16px 0 8px 0;
+        .help-title {
             font-size: 14px;
+            font-weight: 700;
+            color: var(--fg);
         }
 
-        #help-content p, #help-content ul {
-            color: #999;
-            font-size: 13px;
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
-
-        #help-content ul {
-            padding-left: 20px;
-        }
-
-        #help-content kbd {
-            background: #3a3a3a;
-            border: 1px solid #4a4a4a;
-            border-radius: 3px;
-            padding: 2px 6px;
-            font-family: monospace;
-            font-size: 11px;
-            color: #fff;
-        }
-
-        .close-btn {
-            float: right;
-            background: none;
-            border: none;
-            color: #999;
-            font-size: 24px;
+        .help-close {
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--fg);
+            border-radius: 6px;
+            width: 28px;
+            height: 28px;
             cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
+            font-size: 16px;
             line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .close-btn:hover {
-            color: #fff;
+        .help-close:hover { background: var(--tb-btn-hover); }
+
+        .help-body {
+            padding: 14px;
+            overflow: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .help-section {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .help-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--fg-dim);
+            margin-bottom: 8px;
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 6px 10px;
+            align-items: center;
+            font-size: 12px;
+            color: var(--fg);
+        }
+
+        .k {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 11px;
+            color: var(--accent);
+            background: var(--tb-btn-hover);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            justify-self: start;
+        }
+
+        @media (max-width: 760px) {
+            .help-body { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; }
         }
 
         /* Scrollbar styling */
@@ -508,11 +642,11 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #262930;
+            background: var(--bg);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #3a3a3a;
+            background: var(--border);
             border-radius: 4px;
         }
 
@@ -527,7 +661,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            color: #666;
+            color: var(--fg-dim);
             pointer-events: none;
         }
 
@@ -556,7 +690,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(38, 41, 48, 0.95);
+            background: rgba(30,30,30,0.95);
             display: none;
             align-items: center;
             justify-content: center;
@@ -568,38 +702,39 @@
         }
 
         #progress-container {
-            background: #303340;
-            border: 1px solid #3a3a3a;
-            border-radius: 8px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             padding: 24px 32px;
             min-width: 400px;
             text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
 
         #progress-container h3 {
-            color: #fff;
+            color: var(--fg);
             margin-bottom: 16px;
             font-size: 16px;
         }
 
         #progress-bar-bg {
-            background: #2a2a2a;
-            border: 1px solid #3a3a3a;
+            background: var(--border);
             border-radius: 4px;
-            height: 24px;
+            height: 6px;
             overflow: hidden;
             margin-bottom: 12px;
         }
 
         #progress-bar-fill {
-            background: linear-gradient(90deg, #5B9BD5 0%, #70AD47 50%, #FFC000 100%);
+            background: var(--accent);
             height: 100%;
             width: 0%;
+            border-radius: 3px;
             transition: width 0.1s ease;
         }
 
         #progress-text {
-            color: #999;
+            color: var(--fg-dim);
             font-size: 13px;
         }
     </style>
@@ -630,40 +765,95 @@
             
             <div class="separator"></div>
             
-            <button class="btn" id="open-btn">
-                📁 Open
+            <button class="btn" id="open-btn" title="Open .kanata file (Ctrl+O)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/>
+                </svg>
+                Open
             </button>
             <input type="file" id="file-input" accept=".kanata">
             
             <div class="separator"></div>
             
-            <button class="btn btn-icon" id="zoom-in-btn" title="Zoom In">+</button>
-            <button class="btn btn-icon" id="zoom-out-btn" title="Zoom Out">−</button>
-            <button class="btn btn-icon" id="fit-btn" title="Fit to View">⊡</button>
+            <button class="btn btn-icon" id="zoom-in-btn" title="Zoom In (+)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M6.5 1a5.5 5.5 0 1 0 3.89 9.4l3.4 3.4.7-.7-3.4-3.4A5.5 5.5 0 0 0 6.5 1zm0 1a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zM6 5v1.5H4.5v1H6V9h1V7.5h1.5v-1H7V5H6z"/>
+                </svg>
+            </button>
+            <button class="btn btn-icon" id="zoom-out-btn" title="Zoom Out (-)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M6.5 1a5.5 5.5 0 1 0 3.89 9.4l3.4 3.4.7-.7-3.4-3.4A5.5 5.5 0 0 0 6.5 1zm0 1a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zM4 6h5v1H4V6z"/>
+                </svg>
+            </button>
+            <button class="btn btn-icon" id="fit-btn" title="Fit to View (F)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M1.5 1h5v1h-4v4h-1V1.5a.5.5 0 0 1 .5-.5zm13 0a.5.5 0 0 1 .5.5V6h-1V2h-4V1h4.5zM1 10h1v4h4v1H1.5a.5.5 0 0 1-.5-.5V10zm14 0v4.5a.5.5 0 0 1-.5.5H10v-1h4v-4h1z"/>
+                </svg>
+            </button>
             
             <div class="separator"></div>
             
-            <button class="btn" id="find-btn">🔍 Find</button>
+            <button class="btn" id="find-btn" title="Find Instruction (Ctrl+F)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
+                </svg>
+                Find
+            </button>
             
             <div class="separator"></div>
             
-            <button class="btn" id="bookmark-btn" title="Add Bookmark (Ctrl+B)">🔖</button>
+            <button class="btn" id="bookmark-btn" title="Add Bookmark (Ctrl+B)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.26-2.325a.5.5 0 0 1 .48 0L12 14.566V2a1 1 0 0 0-1-1H4z"/>
+                </svg>
+                Mark
+            </button>
             
             <div class="separator"></div>
             
-            <button class="btn" id="anchor-btn" title="Anchor Mode">⚓</button>
+            <button class="btn" id="anchor-btn" title="Anchor Mode">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 1a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm.5 4.5v.634l3.263 1.632A3.001 3.001 0 0 1 14 11.5V12h1v1H1v-1h1v-.5a3.001 3.001 0 0 1 2.237-2.734L7.5 7.134V6.5h1zM8 8a2 2 0 0 0-1.768 1.07L3 7.5V12h10V7.5l-3.232 1.57A2 2 0 0 0 8 8z"/>
+                </svg>
+                Anchor
+            </button>
             
             <div class="separator"></div>
             
-            <button class="btn" id="split-lanes-btn" title="Toggle Split Lanes (L)">⬍ Split Lanes</button>
+            <button class="btn" id="split-lanes-btn" title="Toggle Split Lanes (L)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h11A1.5 1.5 0 0 1 15 2.5v4A1.5 1.5 0 0 1 13.5 8h-11A1.5 1.5 0 0 1 1 6.5v-4zm1.5-.5a.5.5 0 0 0-.5.5v4a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-11zM1 9.5A1.5 1.5 0 0 1 2.5 8h11A1.5 1.5 0 0 1 15 9.5v4a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13.5v-4zm1.5-.5a.5.5 0 0 0-.5.5v4a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-11z"/>
+                </svg>
+                Split Lanes
+            </button>
             
             <div class="separator"></div>
             
-            <button class="btn" id="export-btn" title="Export current view as SVG">⬇ Export SVG</button>
+            <button class="btn" id="export-btn" title="Export current view as SVG">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                </svg>
+                Export SVG
+            </button>
             
             <div class="separator"></div>
             
-            <button class="btn" id="help-btn">❓ Help</button>
+            <button class="btn" id="help-btn" title="Help & keyboard shortcuts (?)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 13A6 6 0 1 1 8 2a6 6 0 0 1 0 12zm0-3.1a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5zM8.2 4.2c-1.2 0-2 .8-2.1 1.9h1c.1-.6.5-1 1.1-1 .7 0 1.1.4 1.1 1 0 .4-.2.7-.8 1.1-.8.5-1.3 1-1.3 2v.3h1v-.2c0-.6.3-.9.9-1.3.7-.5 1.2-1 1.2-1.9 0-1.1-.9-1.9-2.1-1.9z"/>
+                </svg>
+                Help
+            </button>
+            
+            <div class="separator"></div>
+
+            <button class="btn" id="theme-btn" title="Toggle dark/light theme (D)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+                </svg>
+                Dark
+            </button>
             
             <div id="info">No file loaded</div>
         </div>
@@ -709,7 +899,7 @@
                 <div class="panel-section" id="legend-panel">
                     <div class="panel-header">Legend</div>
                     <div class="panel-content" id="legend-content">
-                        <p style="color: #666; font-size: 12px;">Load a file to see stages</p>
+                        <p style="color: var(--fg-dim); font-size: 12px;">Load a file to see stages</p>
                     </div>
                 </div>
 
@@ -739,64 +929,58 @@
     <!-- About Overlay -->
     <div id="about-overlay">
         <div id="about-dialog">
-            <div id="about-header">
-                <svg width="64" height="64" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="3" width="66" height="66" rx="14" fill="#1E3A5F"/>
-                    <rect x="10" y="16" width="14" height="6" rx="2" fill="#5B9BD5"/>
-                    <rect x="26" y="16" width="18" height="6" rx="2" fill="#70AD47"/>
-                    <rect x="46" y="16" width="16" height="6" rx="2" fill="#FFC000"/>
-                    <rect x="10" y="26" width="10" height="6" rx="2" fill="#5B9BD5"/>
-                    <rect x="22" y="26" width="22" height="6" rx="2" fill="#70AD47"/>
-                    <rect x="46" y="26" width="16" height="6" rx="2" fill="#FFC000"/>
-                    <rect x="10" y="36" width="16" height="6" rx="2" fill="#5B9BD5"/>
-                    <rect x="28" y="36" width="16" height="6" rx="2" fill="#70AD47"/>
-                    <rect x="46" y="36" width="16" height="6" rx="2" fill="#FFC000"/>
-                    <rect x="10" y="46" width="12" height="6" rx="2" fill="#5B9BD5"/>
-                    <rect x="24" y="46" width="20" height="6" rx="2" fill="#70AD47"/>
-                    <rect x="46" y="46" width="16" height="6" rx="2" fill="#FFC000"/>
-                    <line x1="20" y1="22" x2="36" y2="29" stroke="#FFC800" stroke-width="1.5"/>
-                    <polygon points="36,29 34,27 34,31" fill="#FFC800"/>
-                </svg>
-                <div id="about-title">Konata Viewer</div>
-                <div id="about-sub">Onikiri2-Konata pipeline trace visualiser &nbsp;·&nbsp; v1.0.0</div>
+            <div class="about-hero">
+                <div class="about-icon" aria-hidden="true">
+                    <span class="bar bar-1"></span>
+                    <span class="bar bar-2"></span>
+                    <span class="bar bar-3"></span>
+                    <span class="bar bar-4"></span>
+                    <span class="marker"></span>
+                </div>
+                <div class="about-title">Konata Viewer</div>
+                <div class="about-subtitle">Onikiri2-Konata pipeline trace visualiser &nbsp;·&nbsp; v1.0.0</div>
             </div>
-            <div class="about-sep"></div>
-            <div id="about-body">
-                <div class="about-block">
-                    <div class="about-sect">Features</div>
-                    <table class="about-table">
-                        <tr><td class="about-key">Gradient Stages</td><td class="about-val">Official Konata gradient stage rendering</td></tr>
-                        <tr><td class="about-key">Stall Numbers</td><td class="about-val">Per-cycle stall count labels matching official viewer</td></tr>
-                        <tr><td class="about-key">Lane Splitting</td><td class="about-val">Expand each lane into its own sub-row</td></tr>
-                        <tr><td class="about-key">Bookmarks</td><td class="about-val">Save and jump to named positions</td></tr>
-                        <tr><td class="about-key">Minimap</td><td class="about-val">Overview panel with live viewport indicator</td></tr>
-                        <tr><td class="about-key">Export SVG</td><td class="about-val">Export current view as self-contained SVG</td></tr>
-                    </table>
+            <div class="about-body">
+                <div class="about-section">
+                    <div class="about-section-title">Features</div>
+                    <div class="about-grid">
+                        <div class="about-key">Gradient Stages</div><div>Official Konata gradient stage rendering</div>
+                        <div class="about-key">Stall Numbers</div><div>Per-cycle stall count labels matching official viewer</div>
+                        <div class="about-key">Lane Splitting</div><div>Expand each lane into its own sub-row</div>
+                        <div class="about-key">Bookmarks</div><div>Save and jump to named positions</div>
+                        <div class="about-key">Minimap</div><div>Overview panel with live viewport indicator</div>
+                        <div class="about-key">Export SVG</div><div>Export current view as self-contained SVG</div>
+                    </div>
                 </div>
-                <div class="about-block">
-                    <div class="about-sect">Controls</div>
-                    <table class="about-table">
-                        <tr><td class="about-key">Ctrl+O</td><td class="about-val">Open file</td></tr>
-                        <tr><td class="about-key">Ctrl+F</td><td class="about-val">Find instruction</td></tr>
-                        <tr><td class="about-key">Ctrl+B</td><td class="about-val">Add bookmark</td></tr>
-                        <tr><td class="about-key">+ / −</td><td class="about-val">Zoom in / out</td></tr>
-                        <tr><td class="about-key">F</td><td class="about-val">Fit visible rows to window</td></tr>
-                        <tr><td class="about-key">Escape</td><td class="about-val">Clear selection</td></tr>
-                        <tr><td class="about-key">Ctrl+Scroll</td><td class="about-val">Zoom &nbsp;·&nbsp; Shift+Scroll: pan horizontally</td></tr>
-                    </table>
+                <div class="about-section">
+                    <div class="about-section-title">Controls</div>
+                    <div class="about-grid">
+                        <div class="about-key">Ctrl+O</div><div>Open file</div>
+                        <div class="about-key">Ctrl+F</div><div>Find instruction</div>
+                        <div class="about-key">Ctrl+B</div><div>Add bookmark</div>
+                        <div class="about-key">+ / −</div><div>Zoom in / out</div>
+                        <div class="about-key">F</div><div>Fit visible rows to window</div>
+                        <div class="about-key">Escape</div><div>Clear selection</div>
+                        <div class="about-key">Ctrl+Scroll</div><div>Zoom · Shift+Scroll: pan horizontally</div>
+                    </div>
                 </div>
-                <div class="about-block">
-                    <div class="about-sect">Application</div>
-                    <table class="about-table">
-                        <tr><td class="about-key">Product</td><td class="about-val">Konata Viewer</td></tr>
-                        <tr><td class="about-key">Purpose</td><td class="about-val">Interactive viewer for Onikiri2-Konata pipeline traces (.kanata)</td></tr>
-                        <tr><td class="about-key">Runtime</td><td class="about-val">Single-file HTML · no external dependencies</td></tr>
-                        <tr><td class="about-key">Format Spec</td><td class="about-val">github.com/shioyadan/Konata</td></tr>
-                    </table>
+                <div class="about-section">
+                    <div class="about-section-title">Application</div>
+                    <div class="about-grid">
+                        <div class="about-key">Product</div><div>Konata Viewer</div>
+                        <div class="about-key">Purpose</div><div>Interactive viewer for Onikiri2-Konata pipeline traces (.kanata)</div>
+                        <div class="about-key">Runtime</div><div>Single-file HTML · no external dependencies</div>
+                        <div class="about-key">Format Spec</div><div>github.com/shioyadan/Konata</div>
+                    </div>
+                </div>
+                <div class="about-section">
+                    <div class="about-section-title">License</div>
+                    <div class="about-grid">
+                        <div class="about-key">License</div><div>MIT License</div>
+                    </div>
                 </div>
             </div>
-            <div class="about-sep"></div>
-            <div id="about-footer">
+            <div class="about-footer">
                 <button id="about-close-btn">Close</button>
             </div>
         </div>
@@ -815,60 +999,57 @@
 
     <!-- Help Overlay -->
     <div id="help-overlay">
-        <div id="help-content">
-            <button class="close-btn" id="close-help-btn">×</button>
-            <h2>Konata Viewer</h2>
-            <p style="color: #999; font-size: 12px; margin-top: -8px; margin-bottom: 16px;">Onikiri2-Konata pipeline trace visualiser · v1.0.0</p>
-            
-            <h3>About</h3>
-            <p>Enhanced web-based viewer for Onikiri2-Konata pipeline trace files (.kanata). Interactive visualisation of instruction execution through processor pipeline stages with gradient rendering, zoom, pan, and search capabilities.</p>
-            
-            <h3>Features</h3>
-            <ul>
-                <li><strong>Gradient Stages</strong> — Official Konata gradient stage rendering</li>
-                <li><strong>Color Schemes</strong> — Auto / Unique / ThreadID / Custom modes</li>
-                <li><strong>Interactive Navigation</strong> — Zoom, pan, and search with keyboard shortcuts</li>
-                <li><strong>Optimized Rendering</strong> — Level-of-detail text rendering for performance</li>
-            </ul>
-            
-            <h3>Keyboard Shortcuts</h3>
-            <ul>
-                <li><kbd>Ctrl</kbd>+<kbd>O</kbd> — Open file</li>
-                <li><kbd>+</kbd> / <kbd>−</kbd> — Zoom in / out</li>
-                <li><kbd>F</kbd> — Fit to view</li>
-                <li><kbd>L</kbd> — Toggle split lanes</li>
-                <li><kbd>Ctrl</kbd>+<kbd>F</kbd> — Find/Search</li>
-                <li><kbd>Ctrl</kbd>+<kbd>B</kbd> — Add bookmark</li>
-                <li><kbd>Escape</kbd> — Clear selection</li>
-                <li><kbd>?</kbd> — Show this help</li>
-            </ul>
-            
-            <h3>Mouse Controls</h3>
-            <ul>
-                <li><strong>Click</strong> — Clear selection</li>
-                <li><strong>Drag</strong> — Pan view</li>
-                <li><strong>Scroll</strong> — Pan vertically</li>
-                <li><strong>Shift+Scroll</strong> — Pan horizontally</li>
-                <li><strong>Ctrl+Scroll</strong> — Zoom in/out</li>
-            </ul>
-            
-            <h3>File Format</h3>
-            <p>Supports standard Onikiri2-Konata trace format with commands:</p>
-            <ul>
-                <li><code>I</code> — Instruction definition</li>
-                <li><code>L</code> — Instruction label</li>
-                <li><code>S</code> — Stage start</li>
-                <li><code>E</code> — Stage end</li>
-                <li><code>R</code> — Retire</li>
-                <li><code>W</code> — Dependencies</li>
-            </ul>
-            
-            <h3>Application</h3>
-            <ul>
-                <li><strong>Product:</strong> Konata Viewer</li>
-                <li><strong>Purpose:</strong> Interactive viewer for Onikiri2-Konata pipeline traces</li>
-                <li><strong>Format Spec:</strong> <a href="https://github.com/shioyadan/Konata" target="_blank" style="color: #5B9BD5;">github.com/shioyadan/Konata</a></li>
-            </ul>
+        <div id="help-dialog">
+            <div class="help-header">
+                <div class="help-title">Help &amp; Shortcuts</div>
+                <button class="help-close" id="close-help-btn">✕</button>
+            </div>
+            <div class="help-body">
+                <div class="help-section">
+                    <div class="help-section-title">Keyboard</div>
+                    <div class="help-grid">
+                        <div class="k">Ctrl+O</div><div>Open file</div>
+                        <div class="k">Ctrl+F</div><div>Find instruction</div>
+                        <div class="k">Ctrl+B</div><div>Add bookmark</div>
+                        <div class="k">+ / −</div><div>Zoom in / out</div>
+                        <div class="k">F</div><div>Fit visible rows to window</div>
+                        <div class="k">L</div><div>Toggle split lanes</div>
+                        <div class="k">D</div><div>Toggle dark/light theme</div>
+                        <div class="k">Escape</div><div>Clear selection</div>
+                        <div class="k">?</div><div>Open/close this help</div>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <div class="help-section-title">Mouse / Trackpad</div>
+                    <div class="help-grid">
+                        <div class="k">Drag</div><div>Pan view</div>
+                        <div class="k">Click</div><div>Clear selection</div>
+                        <div class="k">Wheel</div><div>Pan vertically</div>
+                        <div class="k">Shift+Wheel</div><div>Pan horizontally</div>
+                        <div class="k">Ctrl+Wheel</div><div>Zoom at pointer</div>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <div class="help-section-title">File Format</div>
+                    <div class="help-grid">
+                        <div class="k">I</div><div>Instruction definition</div>
+                        <div class="k">L</div><div>Instruction label</div>
+                        <div class="k">S</div><div>Stage start</div>
+                        <div class="k">E</div><div>Stage end</div>
+                        <div class="k">R</div><div>Retire</div>
+                        <div class="k">W</div><div>Dependencies</div>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <div class="help-section-title">Features</div>
+                    <div class="help-grid">
+                        <div class="k">Gradient Stages</div><div>Official Konata gradient stage rendering</div>
+                        <div class="k">Color Schemes</div><div>Auto / Unique / ThreadID / Custom modes</div>
+                        <div class="k">Lane Splitting</div><div>Expand each lane into its own sub-row</div>
+                        <div class="k">Export SVG</div><div>Export current view as self-contained SVG</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1802,9 +1983,10 @@
                 const ctx = this.ctx;
                 const W = this.width;
                 const H = this.height;
+                const t = this._theme();
                 
                 // Clear
-                ctx.fillStyle = '#262930';  // Official Konata background
+                ctx.fillStyle = t.bg;
                 ctx.fillRect(0, 0, W, H);
                 
                 // Calculate visible range
@@ -1833,7 +2015,7 @@
                 }
                 
                 // Cycle grid
-                ctx.strokeStyle = '#292929';
+                ctx.strokeStyle = t.grid;
                 ctx.lineWidth = 0.5;
                 const gridStep = this.getGridStep();
                 let gc = Math.floor(cyc0 / gridStep) * gridStep;
@@ -1930,10 +2112,10 @@
                 }
                 
                 // Ruler
-                ctx.fillStyle = '#262930';  // Official Konata ruler
+                ctx.fillStyle = t.ruler;
                 ctx.fillRect(LABEL_WIDTH, 0, W - LABEL_WIDTH, RULER_HEIGHT);
                 
-                ctx.fillStyle = '#c7c8ca';  // Official Konata text color
+                ctx.fillStyle = t.fg;
                 ctx.font = '11px sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
@@ -1948,10 +2130,10 @@
                 }
                 
                 // Labels
-                ctx.fillStyle = '#303340';  // Official Konata label pane
+                ctx.fillStyle = t.label;
                 ctx.fillRect(0, RULER_HEIGHT, LABEL_WIDTH, H - RULER_HEIGHT);
                 
-                ctx.fillStyle = '#c7c8ca';  // Official Konata label text
+                ctx.fillStyle = t.fg;
                 ctx.font = '11px monospace';
                 ctx.textAlign = 'left';
                 ctx.textBaseline = 'middle';
@@ -1966,15 +2148,15 @@
                     
                     if (this.splitLanes && this.trace.maxLaneId > 0) {
                         // Main label at lane-0 sub-row center
-                        ctx.fillStyle = '#c7c8ca';
+                        ctx.fillStyle = t.fg;
                         ctx.fillText(truncated, 6, y + ROW_HEIGHT / 2);
                         // Lane index labels for lanes > 0
-                        ctx.fillStyle = '#888';
+                        ctx.fillStyle = t.fgDim;
                         ctx.font = '10px monospace';
                         for (let lid = 1; lid <= this.trace.maxLaneId; lid++) {
                             ctx.fillText(`  lane ${lid}`, 6, y + lid * ROW_HEIGHT + ROW_HEIGHT / 2);
                         }
-                        ctx.fillStyle = '#c7c8ca';
+                        ctx.fillStyle = t.fg;
                         ctx.font = '11px monospace';
                     } else {
                         ctx.fillText(truncated, 6, y + ROW_HEIGHT / 2);
@@ -1982,7 +2164,7 @@
                 }
                 
                 // Corner
-                ctx.fillStyle = '#303340';  // Official Konata corner
+                ctx.fillStyle = t.label;
                 ctx.fillRect(0, 0, LABEL_WIDTH, RULER_HEIGHT);
                 
                 // Update scrollbars and minimap
@@ -2051,11 +2233,25 @@
             }
             
             renderEmpty() {
+                const t = this._theme();
                 const ctx = this.ctx;
-                ctx.fillStyle = '#262930';
+                ctx.fillStyle = t.bg;
                 ctx.fillRect(0, 0, this.width, this.height);
                 this.updateScrollbars();
                 this.updateMinimap();
+            }
+
+            _theme() {
+                const s = getComputedStyle(document.body);
+                return {
+                    bg:       s.getPropertyValue('--canvas-bg').trim() || '#1E1E1E',
+                    label:    s.getPropertyValue('--canvas-label').trim() || '#252526',
+                    ruler:    s.getPropertyValue('--ruler-bg').trim() || '#2D2D2D',
+                    grid:     s.getPropertyValue('--grid-line').trim() || '#2A2A2A',
+                    fg:       s.getPropertyValue('--fg').trim() || '#D4D4D4',
+                    fgDim:    s.getPropertyValue('--fg-dim').trim() || '#858585',
+                    isDark:   !document.body.classList.contains('light'),
+                };
             }
         }
 
@@ -2168,8 +2364,32 @@
                         document.getElementById('about-overlay').style.display = 'none';
                     }
                 });
+
+                // Theme toggle
+                const themeBtn = document.getElementById('theme-btn');
+                const moonSVG = `<svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/></svg>`;
+                const sunSVG  = `<svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/></svg>`;
+                const applyTheme = (isLight) => {
+                    if (isLight) {
+                        document.body.classList.add('light');
+                        themeBtn.innerHTML = sunSVG + ' Light';
+                        themeBtn.title = 'Toggle dark/light theme (D)';
+                        localStorage.setItem('kv-theme', 'light');
+                    } else {
+                        document.body.classList.remove('light');
+                        themeBtn.innerHTML = moonSVG + ' Dark';
+                        themeBtn.title = 'Toggle dark/light theme (D)';
+                        localStorage.setItem('kv-theme', 'dark');
+                    }
+                    this.viewer.render();
+                };
+                themeBtn.addEventListener('click', () => {
+                    applyTheme(!document.body.classList.contains('light'));
+                });
+                // Restore saved theme
+                if (localStorage.getItem('kv-theme') === 'light') applyTheme(true);
             }
-            
+
             setupKeyboard() {
                 document.addEventListener('keydown', (e) => {
                     // Don't handle shortcuts if user is typing in an input
@@ -2214,6 +2434,10 @@
                     else if (e.key === '?') {
                         e.preventDefault();
                         document.getElementById('help-overlay').style.display = 'flex';
+                    }
+                    else if (e.key === 'd' || e.key === 'D') {
+                        e.preventDefault();
+                        document.getElementById('theme-btn').click();
                     }
                     else if (e.ctrlKey && e.key === 'b') {
                         e.preventDefault();
