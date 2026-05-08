@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konata Viewer v1.0.0</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Crect x='3' y='3' width='66' height='66' rx='14' fill='%231E3A5F'/%3E%3Crect x='10' y='16' width='14' height='6' rx='2' fill='%235B9BD5'/%3E%3Crect x='26' y='16' width='18' height='6' rx='2' fill='%2370AD47'/%3E%3Crect x='46' y='16' width='16' height='6' rx='2' fill='%23FFC000'/%3E%3Crect x='10' y='26' width='10' height='6' rx='2' fill='%235B9BD5'/%3E%3Crect x='22' y='26' width='22' height='6' rx='2' fill='%2370AD47'/%3E%3Crect x='46' y='26' width='16' height='6' rx='2' fill='%23FFC000'/%3E%3Crect x='10' y='36' width='16' height='6' rx='2' fill='%235B9BD5'/%3E%3Crect x='28' y='36' width='16' height='6' rx='2' fill='%2370AD47'/%3E%3Crect x='46' y='36' width='16' height='6' rx='2' fill='%23FFC000'/%3E%3Crect x='10' y='46' width='12' height='6' rx='2' fill='%235B9BD5'/%3E%3Crect x='24' y='46' width='20' height='6' rx='2' fill='%2370AD47'/%3E%3Crect x='46' y='46' width='16' height='6' rx='2' fill='%23FFC000'/%3E%3Cline x1='20' y1='22' x2='36' y2='29' stroke='%23FFC800' stroke-width='1.5'/%3E%3Cpolygon points='36,29 34,27 34,31' fill='%23FFC800'/%3E%3C/svg%3E">
+    <style>
+    <!-- @inject:css -->
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Toolbar -->
+        <div id="toolbar">
+            <button id="app-name-btn" title="About Konata Viewer">
+                <svg width="18" height="18" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;margin-right:5px">
+                    <rect x="3" y="3" width="66" height="66" rx="14" fill="#1E3A5F"/>
+                    <rect x="10" y="16" width="14" height="6" rx="2" fill="#5B9BD5"/>
+                    <rect x="26" y="16" width="18" height="6" rx="2" fill="#70AD47"/>
+                    <rect x="46" y="16" width="16" height="6" rx="2" fill="#FFC000"/>
+                    <rect x="10" y="26" width="10" height="6" rx="2" fill="#5B9BD5"/>
+                    <rect x="22" y="26" width="22" height="6" rx="2" fill="#70AD47"/>
+                    <rect x="46" y="26" width="16" height="6" rx="2" fill="#FFC000"/>
+                    <rect x="10" y="36" width="16" height="6" rx="2" fill="#5B9BD5"/>
+                    <rect x="28" y="36" width="16" height="6" rx="2" fill="#70AD47"/>
+                    <rect x="46" y="36" width="16" height="6" rx="2" fill="#FFC000"/>
+                    <rect x="10" y="46" width="12" height="6" rx="2" fill="#5B9BD5"/>
+                    <rect x="24" y="46" width="20" height="6" rx="2" fill="#70AD47"/>
+                    <rect x="46" y="46" width="16" height="6" rx="2" fill="#FFC000"/>
+                    <line x1="20" y1="22" x2="36" y2="29" stroke="#FFC800" stroke-width="1.5"/>
+                    <polygon points="36,29 34,27 34,31" fill="#FFC800"/>
+                </svg>Konata Viewer
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="btn" id="open-btn" title="Open .kanata file (Ctrl+O)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v7a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 12.5v-9z"/>
+                </svg>
+                Open
+            </button>
+            <input type="file" id="file-input" accept=".kanata">
+            
+            <button class="btn" id="demo-btn" title="Load embedded demo trace (jv32soc.kanata)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zm0 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm2.5 6.134-4-2.598A.5.5 0 0 0 6 5v6a.5.5 0 0 0 .768.42l4-2.598a.5.5 0 0 0 0-.838z"/>
+                </svg>
+                Demo
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="btn btn-icon" id="zoom-in-btn" title="Zoom In (+)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M6.5 1a5.5 5.5 0 1 0 3.89 9.4l3.4 3.4.7-.7-3.4-3.4A5.5 5.5 0 0 0 6.5 1zm0 1a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zM6 5v1.5H4.5v1H6V9h1V7.5h1.5v-1H7V5H6z"/>
+                </svg>
+            </button>
+            <button class="btn btn-icon" id="zoom-out-btn" title="Zoom Out (-)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M6.5 1a5.5 5.5 0 1 0 3.89 9.4l3.4 3.4.7-.7-3.4-3.4A5.5 5.5 0 0 0 6.5 1zm0 1a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zM4 6h5v1H4V6z"/>
+                </svg>
+            </button>
+            <button class="btn btn-icon" id="fit-btn" title="Fit to View (F)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M1.5 1h5v1h-4v4h-1V1.5a.5.5 0 0 1 .5-.5zm13 0a.5.5 0 0 1 .5.5V6h-1V2h-4V1h4.5zM1 10h1v4h4v1H1.5a.5.5 0 0 1-.5-.5V10zm14 0v4.5a.5.5 0 0 1-.5.5H10v-1h4v-4h1z"/>
+                </svg>
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="btn" id="find-btn" title="Find Instruction (Ctrl+F)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zm-5.242 1.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
+                </svg>
+                Find
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="btn" id="bookmark-btn" title="Add Bookmark (Ctrl+B)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.26-2.325a.5.5 0 0 1 .48 0L12 14.566V2a1 1 0 0 0-1-1H4z"/>
+                </svg>
+                Mark
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="btn" id="anchor-btn" title="Anchor Mode">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 1a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm.5 4.5v.634l3.263 1.632A3.001 3.001 0 0 1 14 11.5V12h1v1H1v-1h1v-.5a3.001 3.001 0 0 1 2.237-2.734L7.5 7.134V6.5h1zM8 8a2 2 0 0 0-1.768 1.07L3 7.5V12h10V7.5l-3.232 1.57A2 2 0 0 0 8 8z"/>
+                </svg>
+                Anchor
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="btn" id="split-lanes-btn" title="Toggle Split Lanes (L)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h11A1.5 1.5 0 0 1 15 2.5v4A1.5 1.5 0 0 1 13.5 8h-11A1.5 1.5 0 0 1 1 6.5v-4zm1.5-.5a.5.5 0 0 0-.5.5v4a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-11zM1 9.5A1.5 1.5 0 0 1 2.5 8h11A1.5 1.5 0 0 1 15 9.5v4a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 1 13.5v-4zm1.5-.5a.5.5 0 0 0-.5.5v4a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 0-.5-.5h-11z"/>
+                </svg>
+                Split Lanes
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="btn" id="export-btn" title="Export current view as SVG">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                </svg>
+                Export SVG
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="btn" id="help-btn" title="Help & keyboard shortcuts (?)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 13A6 6 0 1 1 8 2a6 6 0 0 1 0 12zm0-3.1a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5zM8.2 4.2c-1.2 0-2 .8-2.1 1.9h1c.1-.6.5-1 1.1-1 .7 0 1.1.4 1.1 1 0 .4-.2.7-.8 1.1-.8.5-1.3 1-1.3 2v.3h1v-.2c0-.6.3-.9.9-1.3.7-.5 1.2-1 1.2-1.9 0-1.1-.9-1.9-2.1-1.9z"/>
+                </svg>
+                Help
+            </button>
+            
+            <div class="separator"></div>
+
+            <button class="btn" id="theme-btn" title="Toggle dark/light theme (D)">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+                </svg>
+                Dark
+            </button>
+            
+            <div id="info">No file loaded</div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Canvas Container -->
+            <div id="canvas-container">
+                <canvas id="main-canvas"></canvas>
+                <!-- Scrollbars -->
+                <div id="h-scrollbar" class="scrollbar horizontal">
+                    <div id="h-scrollbar-thumb" class="scrollbar-thumb"></div>
+                </div>
+                <div id="v-scrollbar" class="scrollbar vertical">
+                    <div id="v-scrollbar-thumb" class="scrollbar-thumb"></div>
+                </div>
+            </div>
+
+            <!-- Side Panel -->
+            <div id="side-panel">
+                <div class="panel-section" id="stats-panel">
+                    <div class="panel-header">Statistics</div>
+                    <div class="panel-content" id="stats-content">
+                        <div class="stat-row">
+                            <span class="stat-label">Instructions:</span>
+                            <span class="stat-value">—</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Cycles:</span>
+                            <span class="stat-value">—</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Span:</span>
+                            <span class="stat-value">—</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Dependencies:</span>
+                            <span class="stat-value">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section" id="legend-panel">
+                    <div class="panel-header">Legend</div>
+                    <div class="panel-content" id="legend-content">
+                        <p style="color: var(--fg-dim); font-size: 12px;">Load a file to see stages</p>
+                    </div>
+                </div>
+
+                <!-- Bookmarks -->
+                <div class="panel-section" id="bookmark-panel">
+                    <div class="panel-header" style="display:flex;align-items:center;justify-content:space-between;">
+                        <span>Bookmarks</span>
+                        <span id="bookmark-add-btn" title="Add bookmark (Ctrl+B)" style="cursor:pointer;color:#FFC000;font-size:16px;line-height:1;padding:0 2px;">+</span>
+                    </div>
+                    <div class="panel-content" id="bookmark-content">
+                        <div id="bookmark-list"><span id="bookmark-empty">No bookmarks yet</span></div>
+                    </div>
+                </div>
+
+                <!-- Overview / Minimap -->
+                <div class="panel-section" id="overview-panel">
+                    <div class="panel-header">Overview</div>
+                    <div class="panel-content" style="padding: 8px;">
+                        <canvas id="minimap-canvas" width="256" height="160"></canvas>
+                        <div id="minimap-info"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Overlay -->
+    <div id="about-overlay">
+        <div id="about-dialog">
+            <div class="about-hero">
+                <div class="about-icon" aria-hidden="true">
+                    <span class="bar bar-1"></span>
+                    <span class="bar bar-2"></span>
+                    <span class="bar bar-3"></span>
+                    <span class="bar bar-4"></span>
+                    <span class="marker"></span>
+                </div>
+                <div class="about-title">Konata Viewer</div>
+                <div class="about-subtitle">Onikiri2-Konata pipeline trace visualiser &nbsp;·&nbsp; v1.0.0</div>
+            </div>
+            <div class="about-body">
+                <div class="about-section">
+                    <div class="about-section-title">Features</div>
+                    <div class="about-grid">
+                        <div class="about-key">Gradient Stages</div><div>Official Konata gradient stage rendering</div>
+                        <div class="about-key">Stall Numbers</div><div>Per-cycle stall count labels matching official viewer</div>
+                        <div class="about-key">Lane Splitting</div><div>Expand each lane into its own sub-row</div>
+                        <div class="about-key">Bookmarks</div><div>Save and jump to named positions</div>
+                        <div class="about-key">Minimap</div><div>Overview panel with live viewport indicator</div>
+                        <div class="about-key">Export SVG</div><div>Export current view as self-contained SVG</div>
+                    </div>
+                </div>
+                <div class="about-section">
+                    <div class="about-section-title">Controls</div>
+                    <div class="about-grid">
+                        <div class="about-key">Ctrl+O</div><div>Open file</div>
+                        <div class="about-key">Ctrl+F</div><div>Find instruction</div>
+                        <div class="about-key">Ctrl+B</div><div>Add bookmark</div>
+                        <div class="about-key">+ / −</div><div>Zoom in / out</div>
+                        <div class="about-key">F</div><div>Fit visible rows to window</div>
+                        <div class="about-key">Escape</div><div>Clear selection</div>
+                        <div class="about-key">Ctrl+Scroll</div><div>Zoom · Shift+Scroll: pan horizontally</div>
+                    </div>
+                </div>
+                <div class="about-section">
+                    <div class="about-section-title">Application</div>
+                    <div class="about-grid">
+                        <div class="about-key">Product</div><div>Konata Viewer</div>
+                        <div class="about-key">Purpose</div><div>Interactive viewer for Onikiri2-Konata pipeline traces (.kanata)</div>
+                        <div class="about-key">Runtime</div><div>Single-file HTML · no external dependencies</div>
+                        <div class="about-key">Format Spec</div><div>github.com/shioyadan/Konata</div>
+                    </div>
+                </div>
+                <div class="about-section">
+                    <div class="about-section-title">License</div>
+                    <div class="about-grid">
+                        <div class="about-key">License</div><div>MIT License</div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-footer">
+                <button id="about-close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Overlay -->
+    <div id="progress-overlay">
+        <div id="progress-container">
+            <h3>Loading Pipeline Trace</h3>
+            <div id="progress-bar-bg">
+                <div id="progress-bar-fill"></div>
+            </div>
+            <div id="progress-text">Initializing...</div>
+        </div>
+    </div>
+
+    <!-- Help Overlay -->
+    <div id="help-overlay">
+        <div id="help-dialog">
+            <div class="help-header">
+                <div class="help-title">Help &amp; Shortcuts</div>
+                <button class="help-close" id="close-help-btn">✕</button>
+            </div>
+            <div class="help-body">
+                <div class="help-section">
+                    <div class="help-section-title">Keyboard</div>
+                    <div class="help-grid">
+                        <div class="k">Ctrl+O</div><div>Open file</div>
+                        <div class="k">Ctrl+F</div><div>Find instruction</div>
+                        <div class="k">Ctrl+B</div><div>Add bookmark</div>
+                        <div class="k">+ / −</div><div>Zoom in / out</div>
+                        <div class="k">F</div><div>Fit visible rows to window</div>
+                        <div class="k">L</div><div>Toggle split lanes</div>
+                        <div class="k">D</div><div>Toggle dark/light theme</div>
+                        <div class="k">Escape</div><div>Clear selection</div>
+                        <div class="k">?</div><div>Open/close this help</div>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <div class="help-section-title">Mouse / Trackpad</div>
+                    <div class="help-grid">
+                        <div class="k">Drag</div><div>Pan view</div>
+                        <div class="k">Click</div><div>Clear selection</div>
+                        <div class="k">Wheel</div><div>Pan vertically</div>
+                        <div class="k">Shift+Wheel</div><div>Pan horizontally</div>
+                        <div class="k">Ctrl+Wheel</div><div>Zoom at pointer</div>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <div class="help-section-title">File Format</div>
+                    <div class="help-grid">
+                        <div class="k">I</div><div>Instruction definition</div>
+                        <div class="k">L</div><div>Instruction label</div>
+                        <div class="k">S</div><div>Stage start</div>
+                        <div class="k">E</div><div>Stage end</div>
+                        <div class="k">R</div><div>Retire</div>
+                        <div class="k">W</div><div>Dependencies</div>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <div class="help-section-title">Features</div>
+                    <div class="help-grid">
+                        <div class="k">Gradient Stages</div><div>Official Konata gradient stage rendering</div>
+                        <div class="k">Color Schemes</div><div>Auto / Unique / ThreadID / Custom modes</div>
+                        <div class="k">Lane Splitting</div><div>Expand each lane into its own sub-row</div>
+                        <div class="k">Export SVG</div><div>Export current view as self-contained SVG</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    <!-- @inject:js -->
+    </script>
+</body>
+</html>

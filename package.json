@@ -1,0 +1,16 @@
+{
+  "name": "konata-viewer",
+  "version": "1.0.0",
+  "description": "Standalone single-file pipeline trace viewer for Konata (.kanata) files",
+  "scripts": {
+    "build": "node build.js",
+    "watch": "node -e \"const{execSync}=require('child_process');const fs=require('fs');let t=0;fs.watch('src',{recursive:true},()=>{const n=Date.now();if(n-t<200)return;t=n;try{execSync('node build.js',{stdio:'inherit'})}catch(e){}});fs.watch('examples',{recursive:true},()=>{const n=Date.now();if(n-t<200)return;t=n;try{execSync('node build.js',{stdio:'inherit'})}catch(e){}});console.log('Watching src/ and examples/ ...')\""
+  },
+  "private": true,
+  "engines": {
+    "node": ">=14"
+  },
+  "devDependencies": {
+    "terser": "^5.47.1"
+  }
+}
