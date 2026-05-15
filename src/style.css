@@ -1,6 +1,8 @@
         /* ---- CSS custom properties ---- */
         :root {
             --bg:            #1E1E1E;
+            --bg-layer-1:    #252526;
+            --bg-layer-2:    #2D2D2D;
             --panel-bg:      #252526;
             --tb-bg:         #2D2D2D;
             --tb-btn-hover:  rgba(255,255,255,0.08);
@@ -9,15 +11,18 @@
             --fg:            #D4D4D4;
             --fg-dim:        #858585;
             --accent:        #4F8BFF;
+            --accent-2:      #569CD6;
             --canvas-bg:     #1E1E1E;
             --canvas-label:  #252526;
             --ruler-bg:      #2D2D2D;
-            --grid-line:     #2A2A2A;
+            --grid-line:     #3C3C3C;
         }
 
         /* ---- Light theme overrides ---- */
         body.light {
             --bg:            #FFFFFF;
+            --bg-layer-1:    #F5F5F5;
+            --bg-layer-2:    #EEEEEE;
             --panel-bg:      #F5F5F5;
             --tb-bg:         #F0F0F0;
             --tb-btn-hover:  rgba(0,0,0,0.06);
@@ -26,8 +31,9 @@
             --fg:            #1E1E1E;
             --fg-dim:        #666666;
             --accent:        #0066CC;
+            --accent-2:      #0078D4;
             --canvas-bg:     #FFFFFF;
-            --canvas-label:  #F0F0F0;
+            --canvas-label:  #F5F5F5;
             --ruler-bg:      #EEEEEE;
             --grid-line:     #DDDDDD;
         }
@@ -39,7 +45,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
             background: var(--bg);
             color: var(--fg);
             overflow: hidden;
@@ -51,17 +57,20 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
+            width: 100vw;
+            overflow: hidden;
         }
 
         /* Toolbar */
         #toolbar {
             background: var(--tb-bg);
             border-bottom: 1px solid var(--border);
-            padding: 6px 10px;
+            padding: 8px 12px;
             display: flex;
             gap: 6px;
             align-items: center;
             flex-shrink: 0;
+            backdrop-filter: blur(4px);
         }
 
         #app-name-btn {
@@ -72,8 +81,8 @@
             font-weight: 700;
             font-family: inherit;
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 5px 10px;
+            border-radius: 9px;
             white-space: nowrap;
             letter-spacing: 0.3px;
             transition: background 0.15s;
@@ -86,21 +95,22 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            padding: 3px 8px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            background: transparent;
+            padding: 5px 9px;
+            border: 1px solid color-mix(in oklab, var(--border), transparent 20%);
+            border-radius: 8px;
+            background: color-mix(in oklab, var(--tb-bg), transparent 18%);
             color: var(--fg);
             font-size: 12px;
             font-family: inherit;
             cursor: pointer;
             white-space: nowrap;
-            transition: background 0.1s;
+            transition: background 0.12s, border-color 0.12s, transform 0.12s;
         }
 
         .btn:hover:not(:disabled) {
             background: var(--tb-btn-hover);
-            border-color: var(--border);
+            border-color: color-mix(in oklab, var(--accent), var(--border) 60%);
+            transform: translateY(-1px);
         }
 
         .btn:disabled {
@@ -114,14 +124,28 @@
             color: var(--accent);
         }
 
+        #theme-btn.theme-light {
+            background: color-mix(in oklab, var(--accent), white 84%);
+            border-color: color-mix(in oklab, var(--accent), var(--border) 55%);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        #theme-btn.theme-dark {
+            background: color-mix(in oklab, var(--accent), #000 72%);
+            border-color: color-mix(in oklab, var(--accent), var(--border) 60%);
+            color: #f6f0e4;
+            font-weight: 600;
+        }
+
         .btn-icon {
-            padding: 3px 6px;
+            padding: 5px 7px;
         }
 
         .separator {
             width: 1px;
             height: 20px;
-            background: var(--border);
+            background: color-mix(in oklab, var(--border), transparent 25%);
             margin: 0 4px;
         }
 
@@ -147,7 +171,7 @@
             flex: 1;
             position: relative;
             overflow: hidden;
-            background: var(--bg);
+            background: var(--canvas-bg);
         }
 
         #main-canvas {
@@ -162,7 +186,7 @@
         /* Scrollbars */
         .scrollbar {
             position: absolute;
-            background: var(--bg);
+            background: color-mix(in oklab, var(--canvas-bg), #000 8%);
             z-index: 10;
         }
         
@@ -182,18 +206,18 @@
         
         .scrollbar-thumb {
             position: absolute;
-            background: #505560;
+            background: color-mix(in oklab, var(--accent), #666 48%);
             border-radius: 3px;
             cursor: pointer;
             transition: background 0.1s;
         }
         
         .scrollbar-thumb:hover {
-            background: #606570;
+            background: color-mix(in oklab, var(--accent), #888 42%);
         }
         
         .scrollbar-thumb:active {
-            background: #707580;
+            background: color-mix(in oklab, var(--accent), #444 30%);
         }
         
         .scrollbar.horizontal .scrollbar-thumb {
@@ -261,7 +285,7 @@
         }
 
         .bookmark-del:hover {
-            color: #cc4444;
+            color: #e06645;
         }
 
         #bookmark-empty {
@@ -301,6 +325,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            backdrop-filter: blur(4px);
         }
 
         .panel-section {
@@ -312,7 +337,7 @@
 
         .panel-header {
             background: var(--tb-bg);
-            padding: 6px 10px 4px;
+            padding: 8px 10px 6px;
             font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
@@ -375,7 +400,7 @@
         #about-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(10,8,5,0.55);
             backdrop-filter: blur(2px);
             display: none;
             justify-content: center;
@@ -388,7 +413,7 @@
             max-height: min(82vh, 720px);
             background: var(--panel-bg);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 14px;
             box-shadow: 0 12px 36px rgba(0,0,0,0.45);
             display: flex;
             flex-direction: column;
@@ -402,7 +427,7 @@
             gap: 8px;
             padding: 24px 24px 20px;
             border-bottom: 1px solid var(--border);
-            background: linear-gradient(180deg, rgba(79,139,255,0.1), var(--panel-bg));
+            background: linear-gradient(180deg, color-mix(in oklab, var(--accent), transparent 84%), var(--panel-bg));
         }
 
         .about-icon {
@@ -506,7 +531,7 @@
 
         #about-close-btn {
             border: 1px solid transparent;
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent), color-mix(in oklab, var(--accent), #000 16%));
             color: #fff;
             border-radius: 8px;
             min-width: 84px;
@@ -528,7 +553,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(10,8,5,0.55);
             backdrop-filter: blur(2px);
             display: none;
             justify-content: center;
@@ -541,7 +566,7 @@
             max-height: min(82vh, 760px);
             background: var(--panel-bg);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 14px;
             box-shadow: 0 12px 36px rgba(0,0,0,0.45);
             display: flex;
             flex-direction: column;
@@ -564,7 +589,7 @@
 
         .help-close {
             border: 1px solid var(--border);
-            background: transparent;
+            background: color-mix(in oklab, var(--tb-bg), transparent 22%);
             color: var(--fg);
             border-radius: 6px;
             width: 28px;
@@ -615,11 +640,22 @@
             font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
             font-size: 11px;
             color: var(--accent);
-            background: var(--tb-btn-hover);
+            background: color-mix(in oklab, var(--tb-bg), transparent 20%);
             border: 1px solid var(--border);
             border-radius: 4px;
             padding: 2px 6px;
             justify-self: start;
+        }
+
+        @media (max-width: 980px) {
+            #app {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                border-radius: 0;
+                border-left: 0;
+                border-right: 0;
+            }
         }
 
         @media (max-width: 760px) {
@@ -682,7 +718,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(30,30,30,0.95);
+            background: rgba(12,10,8,0.88);
             display: none;
             align-items: center;
             justify-content: center;
@@ -696,7 +732,7 @@
         #progress-container {
             background: var(--panel-bg);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 14px;
             padding: 24px 32px;
             min-width: 400px;
             text-align: center;

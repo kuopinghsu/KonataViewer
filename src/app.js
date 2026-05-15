@@ -123,12 +123,18 @@ class App {
             if (isLight) {
                 document.body.classList.add('light');
                 themeBtn.innerHTML = sunSVG + ' Light';
-                themeBtn.title = 'Toggle dark/light theme (D)';
+                themeBtn.title = 'Current: Light. Press D to switch to Dark';
+                themeBtn.classList.remove('theme-dark');
+                themeBtn.classList.add('theme-light');
+                themeBtn.setAttribute('aria-label', 'Current theme Light. Press D to switch to Dark');
                 localStorage.setItem('kv-theme', 'light');
             } else {
                 document.body.classList.remove('light');
                 themeBtn.innerHTML = moonSVG + ' Dark';
-                themeBtn.title = 'Toggle dark/light theme (D)';
+                themeBtn.title = 'Current: Dark. Press D to switch to Light';
+                themeBtn.classList.remove('theme-light');
+                themeBtn.classList.add('theme-dark');
+                themeBtn.setAttribute('aria-label', 'Current theme Dark. Press D to switch to Light');
                 localStorage.setItem('kv-theme', 'dark');
             }
             this.viewer.render();
